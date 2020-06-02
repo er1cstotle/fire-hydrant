@@ -14,6 +14,10 @@ export {
 } from './firestore/document'
 
 export {
+  useAuthState,
+} from './auth'
+
+export {
   useCollectionListener,
   useCollectionDataListener,
   useCollectionMapListener,

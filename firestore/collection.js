@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { querySnapshotToDocs, querySnapshotToMap } from "./helpers";
+import { querySnapshotToDocs, querySnapshotToMap, useGetQuery } from "./helpers";
 
 export const useCollectionListener = (collectionQuery, callback, errorCallback) => {
   useEffect(() => {
@@ -35,11 +35,62 @@ export const useCollectionMapListener = (collectionQuery, callback, errorCallbac
   );
 };
 
-export const useCollectionOnce = () => {};
+export const useCollectionOnce = (collectionQuery) => {
+  const [snapshot, setSnapshot] = useState()
+  const [error, setError] = useState()
+  const [loading, setLoading] = useState(true)
 
-export const useCollectionDataOnce = () => {};
+  useEffect(() => {
+    collectionQuery.get()
+      .then((querySnapshot) => {
+        setSnapshot(querySnapshot)
+        setLoading(false)
+      }).catch((error) => {
+        setError(error)
+        setLoading(false)
+      })
+  }, [])
 
-export const useCollectionMapOnce = () => {};
+  return [snapshot, loading, error, setSnapshot]
+};
+
+export const useCollectionDataOnce = (collectionQuery) => {
+  const [documents, setDocuments] = useState()
+  const [error, setError] = useState()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    collectionQuery.get()
+      .then((querySnapshot) => {
+        setDocuments(querySnapshotToDocs(querySnapshot))
+        setLoading(false)
+      }).catch((error) => {
+        setError(error)
+        setLoading(false)
+      })
+  }, [])
+
+  return [documents, loading, error, setDocuments]
+};
+
+export const useCollectionMapOnce = (collectionQuery) => {
+  const [map, setMap] = useState()
+  const [error, setError] = useState()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    collectionQuery.get()
+      .then((querySnapshot) => {
+        setMap(querySnapshotToMap(querySnapshot))
+        setLoading(false)
+      }).catch((error) => {
+        setError(error)
+        setLoading(false)
+      })
+  }, [])
+
+  return [map, loading, error, setMap]
+};
 
 export const useCollection = (collectionQuery) => {
   const [documents, setDocuments] = useState();

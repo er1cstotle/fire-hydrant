@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 export const docSnapshotToData = (snapshot) => {
   if (!snapshot.exists) {
     return undefined;
@@ -9,17 +11,30 @@ export const docSnapshotToData = (snapshot) => {
   };
 };
 
-export const querySnapshotToDocs = (snapshot) => snapshot.docs.map((doc) => {
-  return {
-    id: doc.id,
-    ...doc.data()
-  };
-});
+export const querySnapshotToDocs = (snapshot) => {
+  if (!snapshot) {
+    return undefined;
+  }
 
-export const querySnapshotToMap = (snapshot) => snapshot.docs.reduce((accum, doc) => {
-  accum[doc.id] = {
-    id: doc.id,
-    ...doc.data()
-  };
-  return accum
-}, {});
+  return snapshot.docs.map((doc) => {
+    return {
+      id: doc.id,
+      ...doc.data()
+    };
+  });
+}
+
+export const querySnapshotToMap = (snapshot) => {
+  if (!snapshot) {
+    return undefined;
+  }
+
+  return snapshot.docs.reduce((accum, doc) => {
+  
+    accum[doc.id] = {
+      id: doc.id,
+      ...doc.data()
+    };
+    return accum
+  }, {});
+}
